@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat com Amigos</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 500px;
+            background: #222222;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #messages {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .input-container input {
+            flex: 1;
+            padding: 10px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .input-container button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #4e54c8;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .input-container button:hover {
+            background: #8f94fb;
+        }
+
+        #amigoInput {
+            margin-bottom: 20px;
+        }
+
+        #amigosLista {
+            max-height: 100px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .friend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 5px 0;
+            padding: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Chat com Amigos</h2>
+        <div id="amigosLista"></div>
+        <div class="input-container">
+            <input type="text" id="amigoInput" placeholder="Adicionar amigo..." required>
+            <button onclick="adicionarAmigo()">Adicionar</button>
+        </div>
+
+        <div id="messages"></div>
+        <div class="input-container">
+            <input type="text" id="chatMessage" placeholder="Digite sua mensagem..." required>
+            <button onclick="enviarMensagem()">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        let amigos = [];
+        let currentFriend = null;
+
+        function adicionarAmigo() {
+            const amigoInput = document.getElementById('amigoInput').value.trim();
+            if (amigoInput && !amigos.includes(amigoInput)) {
+                amigos.push(amigoInput);
+                atualizarListaAmigos();
+                document.getElementById('amigoInput').value = '';
+            }
+        }
+
+        function atualizarListaAmigos() {
+            const amigosLista = document.getElementById('amigosLista');
+            amigosLista.innerHTML = '';
+            amigos.forEach(amigo => {
+                const item = document.createElement('div');
+                item.className = 'friend-item';
+                item.innerHTML = `
+                    ${amigo} <button onclick="selecionarAmigo('${amigo}')">Conversar</button>
+                `;
+                amigosLista.appendChild(item);
+            });
+        }
+
+        function selecionarAmigo(amigo) {
+            if (amigos.includes(amigo)) {
+                currentFriend = amigo;
+                document.getElementById('messages').innerHTML = `<strong>Conversando com: ${amigo}</strong>`;
+                // Limpar mensagens
+                document.getElementById('chatMessage').value = '';
+            } else {
+                alert("Amigo não encontrado na lista.");
+            }
+        }
+
+        function enviarMensagem() {
+            const messageInput = document.getElementById('chatMessage');
+            const messageText = messageInput.value.trim();
+            if (!messageText || !currentFriend) return;
+
+            const messagesDiv = document.getElementById('messages');
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message';
+            messageElement.innerHTML = `<strong>${currentFriend}:</strong> ${messageText}`;
+            messagesDiv.appendChild(messageElement);
+            messageInput.value = '';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro e Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: linear-gradient(135deg, #4e54c8, #8f94fb);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background: #4e54c8;
+            color: #ffffff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="registro">
+            <h2>Cadastro</h2>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Senha" required>
+            <button onclick="cadastrar()">Cadastrar</button>
+            <p id="mensagem"></p>
+        </div>
+
+        <div id="login" style="display: none;">
+            <h2>Login</h2>
+            <input type="email" id="loginEmail" placeholder="Email" required>
+            <input type="password" id="loginSenha" placeholder="Senha" required>
+            <button onclick="login()">Login</button>
+        </div>
+
+        <button onclick="toggleLogin()">Alternar entre Login e Cadastro</button>
+    </div>
+
+    <script>
+        function toggleLogin() {
+            const registro = document.getElementById('registro');
+            const login = document.getElementById('login');
+            if (registro.style.display === "none") {
+                registro.style.display = "block";
+                login.style.display = "none";
+            } else {
+                registro.style.display = "none";
+                login.style.display = "block";
+            }
+        }
+
+        function cadastrar() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `email=${email}&password=${password}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('mensagem').innerText = data;
+            });
+        }
+
+        function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginSenha').value;
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `email=${email}&password=${password}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                if (data.includes("Login bem-sucedido")) {
+                    // Redirecionar para a página de chat ou outra lógica
+                }
+            });
+        }
+    </script>
+</body>
+</html>
